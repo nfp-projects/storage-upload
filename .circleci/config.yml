@@ -16,8 +16,12 @@ jobs:
       - run:
           name: Build docker image
           command: |
-            docker build -t test .
+            docker build -t nfp-test .
             docker build --build-arg NODE=production -t ${di}:build_${CIRCLE_BUILD_NUM} -t ${di}:${CIRCLE_SHA1} -t ${di}:${dtag} .
+      - run:
+          name: Run tests
+          command: |
+            docker run nfp-test npm run test
       - deploy:
           name: Push to docker
           command: |
