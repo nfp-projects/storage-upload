@@ -60,6 +60,9 @@ typings/
 # Local development config file
 config/config.json
 
+# Public folder should be ignored
+public/*
+
 # lol
 package-lock.json
 
