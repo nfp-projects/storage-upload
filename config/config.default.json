@@ -1,0 +1,22 @@
+{
+  "NODE_ENV": "development",
+  "server": {
+    "port": 4020,
+    "host": "0.0.0.0"
+  },
+  "bunyan": {
+    "name": "storage-upload",
+    "streams": [{
+        "stream": "process.stdout",
+        "level": "debug"
+      }
+    ]
+  },
+  "jwt": {
+    "secret": "this-is-my-secret",
+    "options": {
+      "expiresIn": 604800
+    }
+  },
+  "fileSize": 524288000
+}

@@ -1,0 +1,32 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker:latest
+    environment:
+      - di: "nfpis/storage-upload"
+      - dtag: "latest"
+    working_directory: ~/storage-upload
+    steps:
+      - run:
+          name: Update and install SSH & Git
+          command: apk update && apk upgrade && apk add --no-cache bash git openssh
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build docker image
+          command: |
+            docker build -t test .
+            docker build --build-arg NODE=production -t ${di}:build_${CIRCLE_BUILD_NUM} -t ${di}:${CIRCLE_SHA1} -t ${di}:${dtag} .
+      - deploy:
+          name: Push to docker
+          command: |
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push ${di}
+
+workflows:
+  version: 2
+  build_deploy:
+    jobs:
+      - build:
+          context: org-global

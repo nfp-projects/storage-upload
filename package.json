@@ -1,0 +1,38 @@
+{
+  "name": "storage-upload",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "test": "env NODE_ENV=test mocha --require babel-register --recursive --reporter dot",
+    "docker": "docker run -it --rm --name my-running-script -v \"$PWD\":/usr/src/app -w /usr/src/app node:slim",
+    "docker:test": "npm run docker -- npm install && npm run test",
+    "docker:dev": "npm run docker -- npm install && npm run dev",
+    "docker:prod": "npm run docker -- npm install && npm run start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nfp-projects/storage-upload.git"
+  },
+  "author": "Jonatan Nilsson",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/nfp-projects/storage-upload/issues"
+  },
+  "homepage": "https://github.com/nfp-projects/storage-upload#readme",
+  "dependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "koa": "^2.3.0",
+    "koa-router": "^7.2.1",
+    "nconf": "^0.8.5"
+  },
+  "devDependencies": {
+    "assert-extended": "^1.0.1",
+    "mocha": "^4.0.1",
+    "nodemon": "^1.12.1",
+    "request-json": "^0.6.2"
+  }
+}
