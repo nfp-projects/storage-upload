@@ -4,6 +4,6 @@ import * as test from './test/routes'
 
 const router = new Router()
 
-router.get('/api/test', test.testStatic)
+router.get('/', test.testStatic)
 
 export default router

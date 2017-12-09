@@ -8,9 +8,9 @@
     "start": "node index.js",
     "test": "env NODE_ENV=test mocha --require babel-register --recursive --reporter dot",
     "docker": "docker run -it --rm --name my-running-script -v \"$PWD\":/usr/src/app -w /usr/src/app node:slim",
-    "docker:test": "npm run docker -- npm install && npm run test",
-    "docker:dev": "npm run docker -- npm install && npm run dev",
-    "docker:prod": "npm run docker -- npm install && npm run start"
+    "docker:test": "npm run docker -- npm install --no-optional && npm run test",
+    "docker:dev": "npm run docker -- npm install --no-optional && npm run dev",
+    "docker:prod": "npm run docker -- npm install --no-optional && npm run start"
   },
   "repository": {
     "type": "git",
@@ -33,6 +33,7 @@
     "assert-extended": "^1.0.1",
     "mocha": "^4.0.1",
     "nodemon": "^1.12.1",
-    "request-json": "^0.6.2"
+    "request-json": "^0.6.2",
+    "sinon": "^4.1.3"
   }
 }

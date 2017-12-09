@@ -1,6 +1,5 @@
 'use strict'
 
-const _ = require('lodash')
 const nconf = require('nconf')
 
 // Helper method for global usage.
@@ -16,7 +15,14 @@ nconf.inTest = () => nconf.get('NODE_ENV') === 'test'
 // Load package.json for name and such
 let pckg = require('./package.json')
 
-pckg = _.pick(pckg, ['name', 'version', 'description', 'author', 'license', 'homepage'])
+pckg = {
+  name: pckg.name,
+  version: pckg.version,
+  description: pckg.description,
+  author: pckg.author,
+  license: pckg.license,
+  homepage: pckg.homepage,
+}
 
 
 // Load overrides as first priority

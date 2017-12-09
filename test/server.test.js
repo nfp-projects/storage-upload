@@ -11,7 +11,7 @@ describe('Server', () => {
 
   it('should run', () =>
     assert.isFulfilled(
-      client.getAsync('/api/test')
+      client.getAsync('/')
     )
     .then(data => {
       assert.ok(data)
