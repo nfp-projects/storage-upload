@@ -19,7 +19,7 @@ docker run -d \
 
 ### Config
 
-The config file should look something like this:
+The mapped config file should look something like this:
 
 `config.production.json`
 ```json
@@ -60,7 +60,7 @@ Uploading or removing uploaded files on the storage server.
   
 *  **URL Params**
  
-   `token=[json-web-token]`
+   `token=[site-token-here]`
 
 * **Data Params**
    
@@ -81,3 +81,81 @@ Uploading or removing uploaded files on the storage server.
   ```bash
   curl -X POST -F "file=@test.png" http://localhost:4000/media\?token\=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaXRlIjoidGVzdCJ9.2LAuYwb1bwiMPUWD3gNJKwt9PwLgctleLhYd6sc0FCU
   ```
+
+
+# Example node.js helper
+
+`upload.js`
+```node
+const http = require('http')
+const path = require('path')
+const fs = require('fs')
+
+function upload(token, file) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(file, (err, data) => {
+      if (err) return reject(err)
+
+      const crlf = '\r\n'
+      const filename = path.basename(file)
+      const boundary = `--${Math.random().toString(16)}`
+      const headers = [
+        `Content-Disposition: form-data; name="file"; filename="${filename}"` + crlf
+      ]
+      const multipartBody = Buffer.concat([
+        new Buffer(
+          `${crlf}--${boundary}${crlf}` +
+          headers.join('') + crlf
+        ),
+        data,
+        new Buffer(
+          `${crlf}--${boundary}--`
+        )
+      ])
+
+      const options = {
+        port: 2111,
+        hostname: 'storage01.nfp.is',
+        method: 'POST',
+        path: '/media?token=' + token,
+        headers: {
+          'Content-Type': 'multipart/form-data; boundary=' + boundary,
+          'Content-Length': multipartBody.length
+        },
+      }
+
+      const req = http.request(options)
+
+      req.write(multipartBody)
+      req.end()
+
+      req.on('error', reject)
+
+      req.on('response', res => {
+        res.setEncoding('utf8')
+        let output = ''
+
+        res.on('data', function (chunk) {
+          output += chunk.toString()
+        })
+
+        res.on('end', function () {
+          try {
+            output = JSON.parse(output)
+          } catch (e) {
+            // Do nothing
+          }
+          resolve(output)
+        })
+      })
+    })
+  })
+}
+
+// upload('insert-site-token-here', 'test.png')
+//   .then(res => {
+//     console.log('GOT RESULT', res)
+//   }, err => {
+//     console.log('ERROR', err)
+//   })
+```
