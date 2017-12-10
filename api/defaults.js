@@ -1,14 +1,20 @@
 
-export default function defaults(options, defaults) {
+function defaults(options, def) {
   options = options || {}
 
-  Object.keys(defaults).forEach(function(key) {
+  Object.keys(def).forEach(function(key) {
     if (typeof options[key] === 'undefined') {
       // No need to do clone since we mostly deal with
       // flat objects
-      options[key] = defaults[key]
+      options[key] = def[key]
+    }
+    else if (typeof options[key] === 'object' &&
+             typeof def[key] === 'object') {
+      options[key] = defaults(options[key], def[key])
     }
   })
 
   return options
 }
+
+export default defaults
