@@ -1,6 +1,12 @@
-'use strict'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import Nconf from 'nconf-lite'
 
-const nconf = require('nconf')
+const nconf = new Nconf()
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+let pckg = JSON.parse(fs.readFileSync(path.resolve(path.join(__dirname, '../package.json'))))
+
 
 // Helper method for global usage.
 nconf.inTest = () => nconf.get('NODE_ENV') === 'test'
@@ -11,9 +17,6 @@ nconf.inTest = () => nconf.get('NODE_ENV') === 'test'
 // 3. config/config.json
 // 4. config/config.default.json
 
-
-// Load package.json for name and such
-let pckg = require('./package.json')
 
 pckg = {
   name: pckg.name,
@@ -34,22 +37,22 @@ nconf.env()
 
 
 // Load any overrides from the appropriate config file
-let configFile = 'config/config.json'
+let configFile = '../config/config.json'
 
 /* istanbul ignore else */
 if (nconf.get('NODE_ENV') === 'test') {
-  configFile = 'config/config.test.json'
+  configFile = '../config/config.test.json'
 }
 
 /* istanbul ignore if */
 if (nconf.get('NODE_ENV') === 'production') {
-  configFile = 'config/config.production.json'
+  configFile = '../config/config.production.json'
 }
 
-nconf.file('main', configFile)
+nconf.file('main', path.resolve(path.join(__dirname, configFile)))
 
 // Load defaults
-nconf.file('default', 'config/config.default.json')
+nconf.file('default', path.resolve(path.join(__dirname, '../config/config.default.json')))
 
 
 // Final sanity checks
@@ -61,4 +64,4 @@ if (typeof global.it === 'function' & !nconf.inTest()) {
 }
 
 
-module.exports = nconf
+export default nconf

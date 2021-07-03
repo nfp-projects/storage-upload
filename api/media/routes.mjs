@@ -1,6 +1,5 @@
-import config from '../../config'
-import { verifyToken } from './security'
-import { uploadFile, rename } from './multer'
+import { verifyToken } from './security.mjs'
+import { uploadFile } from './multer.mjs'
 
 export async function upload(ctx) {
   let site = await verifyToken(ctx)

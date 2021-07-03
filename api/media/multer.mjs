@@ -1,7 +1,6 @@
-const fs = require('fs')
 import multer from 'multer'
 
-const storage = multer.diskStorage({
+/*const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, '/tmp/my-uploads')
   },
@@ -9,7 +8,7 @@ const storage = multer.diskStorage({
     console.log(file)
     cb(null, file.fieldname + '-' + Date.now())
   }
-})
+})*/
 
 export function uploadFile(ctx, siteName) {
   return new Promise((res, rej) => {
